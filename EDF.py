@@ -118,7 +118,7 @@ def executar(thread:dict):
 
 
 
-a = open('Parte1-SistemasTestes\sistema6extra.txt','r')
+a = open('Parte1-SistemasTestes\sistema3.txt','r')
 modes = a.readline().strip('\n').split('\t')
 threads = []
 i = 1 
@@ -149,6 +149,11 @@ for tarefa in in_dic:
     taxa += (tarefa['custo']/tarefa['periodo'])
 
 print(f'a taxa de utilização: {taxa}')
+if(taxa<=1):
+    print('Sistema é escalonavel')
+else:
+    print('Sistema não é escalonavel')
+
 input()
 
 EDF(in_dic)
