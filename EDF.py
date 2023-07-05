@@ -12,29 +12,57 @@ import time
 #  caso nenhum periodo tenha começado, o processador ficara INATIVO  ###
 
 def EDF(threads:list[dict]):
+    img = ['','','']
     mmc = MMC(threads) #reinicio de ciclos
+    intax = 0.0
     print(f'tempo de reinicio de ciclo: {mmc}')
 
     tempo_atual = 0
-    while(tempo_atual!= mmc+1):
+    while(tempo_atual!= mmc):
         print(f'tempo atual:{tempo_atual}')
         thread = encontrar_thread(threads)
         if(thread!=None):
             if(thread['deadline_absoluta']<tempo_atual):
-                print(f'Thread{thread["nome"]} passou da deadline')
+                print(f'Tarefa{thread["nome"]} passou da deadline')
                 break
             else:
                 executar(thread)
-            pass
+                if(thread["nome"] == 1):
+                    img[0]+=("◼ ")
+                    img[1]+=("◻ ")
+                    img[2]+=("◻ ")
+
+                elif(thread["nome"] == 2):
+                    img[0]+=("◻ ")
+                    img[1]+=("◼ ")
+                    img[2]+=("◻ ")
+                else:
+                    img[0]+=("◻ ")
+                    img[1]+=("◻ ")
+                    img[2]+=("◼ ")
+            
         else:
             print('Nenhuma Tarefa executando, processador inativo')
-            time.sleep(0.5)
+            img[0]+=("◻ ")
+            img[1]+=("◻ ")
+            img[2]+=("◻ ")
+            intax+=1
+            #time.sleep(0.25)
 
         tempo_atual +=1
 
 
         #checa se é inicio de algum periodo
         atualizar_custos(threads,tempo_atual)
+
+   
+
+    print(f'Taxa de utilização para um ciclo: {(1-(intax/mmc))*100}%')
+
+    f = open("img.txt",'w',encoding='UTF-8')
+    for imgs in img: 
+       f.write(imgs+'\n')
+
 
 
 def MMC(threads:list):
@@ -52,7 +80,7 @@ def MMC(threads:list):
             break
         mmc+=maxin
         print(mmc)
-        time.sleep(0.5)
+        #time.sleep(0.25)
 
     return mmc
     
@@ -83,12 +111,14 @@ def executar(thread:dict):
     if(thread['custo_restante'] == 0):
         thread['deadline_absoluta'] += thread['deadline_relativa']
 
-    time.sleep(0.5)
+    #time.sleep(0.25)
+
+
+""" ----------------------------------------MAIN-----------------------------------------------------"""
 
 
 
-
-a = open('Parte1-SistemasTestes\sistema4.txt','r')
+a = open('Parte1-SistemasTestes\sistema6extra.txt','r')
 modes = a.readline().strip('\n').split('\t')
 threads = []
 i = 1 
@@ -111,6 +141,15 @@ for thread in threads:
     }
     in_dic.append(label)
 
+
+taxa = 0.0
+escalona = True
 print(in_dic)
+for tarefa in in_dic:
+    taxa += (tarefa['custo']/tarefa['periodo'])
+
+print(f'a taxa de utilização: {taxa}')
+input()
 
 EDF(in_dic)
+a.close()
