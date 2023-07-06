@@ -1,8 +1,5 @@
 
 import time
-
-
-
 ###
 #  coisas necessárias para esse EDF 
 #  array de cada thread vai possui[periodo, custo, deadline relativa, proximo_periodo, quanto de custo ainda falta, deadline_absoluto]
@@ -152,7 +149,7 @@ print(f'a taxa de utilização: {taxa}')
 if(taxa<=1):
     print('Sistema é escalonavel')
 else:
-    print('Sistema não é escalonavel')
+    print('Sistema provavelmente não é escalonavel')
 
 input()
 
